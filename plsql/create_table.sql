@@ -1,0 +1,4 @@
+CREATE TABLE GSFCDATA_JPSS1_VIIRS_LEVEL2
+(     
+  data blob [ NULL | NOT NULL ]
+);
