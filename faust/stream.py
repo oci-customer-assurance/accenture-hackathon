@@ -7,6 +7,7 @@ app = faust.App('oci-starlink', broker='kafka://localhost')
 class SatelliteData(faust.Record):
     file_name: str
     data_type: str
+    uri: str
 
 @app.agent(value_type=SatelliteData)
 async def spaceAssurance(spaceAssurances):
