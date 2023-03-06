@@ -1,5 +1,5 @@
-# mastermind-hackathon
-Accenture OCI Hackathon getting Satellite GIS Data into Autonomous Database
+# Accenture OCI Hackathon
+Get satellite Data into Autonomous at high velocity
 
 ## Setup .env
 Create a .env file in your local directory
