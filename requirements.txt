@@ -2,3 +2,5 @@
 oci
 python-dotenv
 cx-Oracle
+bs4
+requests

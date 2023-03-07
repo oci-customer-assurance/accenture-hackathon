@@ -6,6 +6,7 @@ import csv
 import time
 import cx_Oracle
 
+
 ##### random helper methods #####
 
 def get_time():
