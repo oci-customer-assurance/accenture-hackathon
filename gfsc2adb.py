@@ -35,7 +35,7 @@ def write_to_file(table): # currently unused
         for row in table:
             csv_writer.writerow(row)
 
-##### database pool class #####
+##### database class #####
 
 DB_USER = os.environ("DB_USER") # change this to grab info from OCI vault
 DB_PASS = os.environ("DB_PASS")
@@ -47,9 +47,32 @@ DB_SCHEMA = "STARLINK_USER"
 WALLET_LOC = os.environ("WALLET_LOC") # location of the ewallet.pem file from the wallet
 WALLET_PASS = os.environ("WALLET_PASS") # password for the wallet
 
+class Database:
+    def __init__(self):
+        self.connection = oracledb.connect(
+            user = DB_USER,
+            password = DB_PASS,
+            dsn = DB_SERVICE,
+            wallet_location = WALLET_LOC,
+            wallet_password = WALLET_PASS)
+
+    def run_sql(self, sql):
+        try:
+            with self.connection.cursor() as cursor:
+                resp = []
+                for item in cursor.execute(sql):
+                    resp += [item]
+                print(f"Response: {resp}") # for debug purposes
+                last_insert_time = resp[0]
+        except:
+            print(f"{get_time()}|Something went wrong. Exception summary:\n{traceback.format_exc()}")
+            return None, False
+        return resp, True
+
+
 ##### SQL definitions #####
 SQL_getLastTime = f"""
-SELECT *
+SELECT LAST_MODIFIED
 FROM (
     SELECT *
     FROM {DB_SCHEMA}.GFSC_DATA
@@ -73,27 +96,17 @@ def main():
     table = grab_table(soup)
 
     print(f"{get_time()}|Initializing database connection...")
-    connection = oracledb.connect(
-        user = DB_USER,
-        password = DB_PASS,
-        dsn = DB_SERVICE,
-        wallet_location = WALLET_LOC,
-        wallet_password = WALLET_PASS)
+    db_conn = Database()
     
     # get the most recently inserted item
     print(f"{get_time()}|Retrieving last insert time...")
     last_insert_time = None
-    try:
-        with connection.cursor() as cursor:
-            resp = []
-            for item in cursor.execute(SQL_getLastTime):
-                resp += [item]
-            print(f"Response: {resp}")
-            last_insert_time = resp[0]
-    except:
-        print(f"{get_time()}|Something went wrong. Exception summary:\n{traceback.format_exc()}")
-    finally:
-        connection.close()
+    resp, success = db_conn.run_sql(SQL_getLastTime)
+    if not success:
+        print("failed")
+    else:
+        print("success")
+        last_insert_time = resp[0][0]
 
     # filter data by last insert time
     print(last_insert_time)
