@@ -1,5 +1,5 @@
 # Accenture OCI Hackathon
-Get satellite Data into Autonomous at high velocity
+Get satellite data into Autonomous Database at high velocity. Build an APEX app with the data. Interconnect with Azure.
 
 ## Setup .env
 Create a .env file in your local directory

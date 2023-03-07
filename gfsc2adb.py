@@ -7,6 +7,7 @@ import time
 import oracledb
 import traceback
 
+
 ##### random helper methods #####
 
 def get_time():
