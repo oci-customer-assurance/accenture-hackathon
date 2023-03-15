@@ -7,9 +7,10 @@ import time
 import json
 import oracledb
 import traceback
+from dotenv import load_dotenv
 from datetime import datetime
 
-
+load_dotenv()
 oracledb.init_oracle_client(lib_dir = "/Users/mjchen/instantclient_19_8")
 
 ##### some constants #####
