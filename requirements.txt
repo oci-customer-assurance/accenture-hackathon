@@ -4,4 +4,4 @@ python-dotenv
 oracledb
 bs4
 requests
-azure
+azure-storage-blob
