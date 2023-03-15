@@ -11,15 +11,12 @@ from dotenv import load_dotenv
 from datetime import datetime
 
 load_dotenv()
-oracledb.init_oracle_client(lib_dir = "/Users/mjchen/instantclient_19_8")
+# oracledb.init_oracle_client(lib_dir = "/Users/mjchen/instantclient_19_8") # used for thick mode
 
 ##### some constants #####
 DB_USER = os.getenv("DB_USER") # change this to grab info from OCI vault
 DB_PASS = os.getenv("DB_PASS")
-DB_SERVICE = "(description= (retry_count=15)(retry_delay=3)\
-(address=(protocol=tcps)(port=1522)(host=adb.eu-frankfurt-1.oraclecloud.com))\
-(connect_data=(service_name=g6aa31b0b04d2f7_nasadw_high.adb.oraclecloud.com))\
-(security=(ssl_server_dn_match=yes)))" # you can find this string in the tnsnames.ora file. service used is "nasadw_high"
+DB_SERVICE = os.getenv("DB_SERVICE") # you can find this string in the tnsnames.ora file. service used is "nasadw_high"
 DB_SCHEMA = "STARLINK_USER"
 WALLET_LOC = os.getenv("WALLET_LOC") # location of the ewallet.pem file from the wallet
 WALLET_PASS = os.getenv("WALLET_PASS") # password for the wallet
