@@ -1,10 +1,12 @@
 import os
 from azure.storage.blob import BlobServiceClient
+from dotenv import load_dotenv
 
-conn_str = #os.getenv("az_storage_conn_str")
-container_name = "michael-chen-container"
-blob_name = "burrito.png"
-file_loc = "/Users/mjchen/Desktop/misc/burrito_p2.png"
+load_dotenv()
+conn_str = os.getenv("az_storage_conn_str")
+container_name = os.getenv("container_name")
+blob_name = os.getenv("blob_name")
+file_loc = os.getenv("file_loc")
 
 # Initialize a BlobServiceClient object
 print("Initializing BlobServiceClient")
