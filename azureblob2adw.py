@@ -14,6 +14,17 @@ from datetime import datetime
 
 load_dotenv()
 
+##### aspose install #####
+convert_tiff_to_png = False
+doc, builder = None, None
+try:
+    import aspose.words as aw
+    doc = aw.Document()
+    builder = aw.DocumentBuilder(doc)
+    convert_tiff_to_png = True
+except:
+    print("Could not import aspose_words. Cannot convert .tif files to .png files.")
+
 
 ##### constants #####
 
@@ -121,7 +132,7 @@ class Database:
         return resp, True
 
     def insert_data(self, bind_vars):
-        print(f"{get_time()}|\tINSERT {bind_vars}")
+        #print(f"{get_time()}|\tINSERT {bind_vars}")
         resp = []
         try:
             with self.connection.cursor() as cursor:
@@ -246,6 +257,19 @@ def main():
     rows_inserted = 0
     for item in data:
         item["FILE_BLOB"] = ablob.download_blob(item["FILE_NAME"])
+        if convert_tiff_to_png and item["FILE_NAME"].split(".")[-1].lower()[:3] == "tif":
+            try:
+                tif_file = "data/" + item["FILE_NAME"]
+                png_file = ".".join(tif_file.split(".")[:-1] + ["png"])
+                with open(tif_file, "wb") as f:
+                    f.write(item["FILE_BLOB"])
+                shape = builder.insert_image(tif_file)
+                shape.image_data.save(png_file)
+                with open(png_file, "rb") as f:
+                    item["FILE_BLOB"] = f.read()
+            except:
+                print(f"Could not convert {item["FILE_NAME"]} to PNG. Inserting as is.")
+                print(traceback.format_exc())
         resp, succ = db_conn.insert_data(item)
         rows_inserted += 1 if succ else 0
 
